@@ -1,11 +1,19 @@
 version: '2'
 services:
-    wordpress:
-        image: wordpress:4.7.4-php7.1-fpm
+    nginx:
+        image: nginx:latest
+        volumes:
+            - ./config/nginx:/etc/nginx/conf.d
+            - ./src:/var/www/html
         ports: 
-            - "your_port:9000"
+            - 9007:80
+        links:
+            - wordpress
+        restart: always
+    wordpress:
+        image: wordpress:4.9.7-php7.1-fpm
         volumes: 
-            - ./src:your_dir_project
+            - ./src:/var/www/html
             - ./config/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
         environment:
             - WORDPRESS_DB_NAME=wpdb    
@@ -18,7 +26,7 @@ services:
     mysql: 
         image: mysql:latest
         volumes: 
-            - ./data/db-data:/var/lib/mysql
+            - ./data/db-data2:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD=Abc@#123456
             - MYSQL_DATABASE=wpdb
